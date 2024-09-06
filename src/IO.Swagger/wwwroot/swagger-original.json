@@ -1,0 +1,465 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Song, Artist, Album, and Playlist API",
+    "description" : "API to manage songs, artists, albums, and playlists.",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://api.example.com"
+  } ],
+  "paths" : {
+    "/api/artist/{artistName}/songs" : {
+      "get" : {
+        "summary" : "Get all songs by an artist",
+        "parameters" : [ {
+          "name" : "artistName",
+          "in" : "path",
+          "description" : "Name of the artist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of songs",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Song"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Add a new song for an artist",
+        "parameters" : [ {
+          "name" : "artistName",
+          "in" : "path",
+          "description" : "Name of the artist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SongInput"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Song added successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/playlist/{playlistName}/songs" : {
+      "get" : {
+        "summary" : "Get all songs in a playlist",
+        "parameters" : [ {
+          "name" : "playlistName",
+          "in" : "path",
+          "description" : "Name of the playlist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of songs",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Song"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Add a new song to a playlist",
+        "parameters" : [ {
+          "name" : "playlistName",
+          "in" : "path",
+          "description" : "Name of the playlist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SongInput"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Song added to playlist successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/artist/{artistName}/songs/{songName}" : {
+      "put" : {
+        "summary" : "Update song details for an artist",
+        "parameters" : [ {
+          "name" : "artistName",
+          "in" : "path",
+          "description" : "Name of the artist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "songName",
+          "in" : "path",
+          "description" : "Name of the song",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SongUpdate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Song details updated successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete a song by an artist",
+        "parameters" : [ {
+          "name" : "artistName",
+          "in" : "path",
+          "description" : "Name of the artist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "songName",
+          "in" : "path",
+          "description" : "Name of the song",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Song deleted successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/playlist/{playlistName}/songs/{songName}" : {
+      "put" : {
+        "summary" : "Update a song's playlists",
+        "parameters" : [ {
+          "name" : "playlistName",
+          "in" : "path",
+          "description" : "Name of the playlist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "songName",
+          "in" : "path",
+          "description" : "Name of the song",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PlaylistUpdate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Song playlists updated successfully",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/artist/{artistName}/playlists" : {
+      "get" : {
+        "summary" : "Get all playlists by an artist",
+        "parameters" : [ {
+          "name" : "artistName",
+          "in" : "path",
+          "description" : "Name of the artist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of playlists",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/playlist/{playlistName}/artists" : {
+      "get" : {
+        "summary" : "Get all artists in a playlist",
+        "parameters" : [ {
+          "name" : "playlistName",
+          "in" : "path",
+          "description" : "Name of the playlist",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of artists",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "x-content-type" : "application/json"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Song" : {
+        "type" : "object",
+        "properties" : {
+          "song" : {
+            "type" : "string"
+          },
+          "artist" : {
+            "type" : "string"
+          },
+          "album" : {
+            "type" : "string"
+          },
+          "playlist" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "example" : {
+          "song" : "song",
+          "playlist" : [ "playlist", "playlist" ],
+          "artist" : "artist",
+          "album" : "album"
+        }
+      },
+      "SongInput" : {
+        "type" : "object",
+        "properties" : {
+          "song" : {
+            "type" : "string"
+          },
+          "album" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SongUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "album" : {
+            "type" : "string"
+          }
+        }
+      },
+      "PlaylistUpdate" : {
+        "type" : "object",
+        "properties" : {
+          "playlists" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }
+      },
+      "inline_response_201" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Song added successfully"
+          }
+        },
+        "example" : {
+          "message" : "Song added successfully"
+        }
+      },
+      "inline_response_201_1" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Song added to playlist successfully"
+          }
+        },
+        "example" : {
+          "message" : "Song added to playlist successfully"
+        }
+      },
+      "inline_response_200" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Song details updated successfully"
+          }
+        },
+        "example" : {
+          "message" : "Song details updated successfully"
+        }
+      },
+      "inline_response_200_1" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Song deleted successfully"
+          }
+        },
+        "example" : {
+          "message" : "Song deleted successfully"
+        }
+      },
+      "inline_response_200_2" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "example" : "Song playlists updated successfully"
+          }
+        },
+        "example" : {
+          "message" : "Song playlists updated successfully"
+        }
+      }
+    }
+  }
+}
