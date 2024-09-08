@@ -1,0 +1,232 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Music Album API",
+    "description" : "API to manage music albums.",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8000/api"
+  } ],
+  "paths" : {
+    "/albums" : {
+      "get" : {
+        "summary" : "Retrieve all albums",
+        "responses" : {
+          "200" : {
+            "description" : "A list of all albums",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Album"
+                  },
+                  "x-content-type" : "application/json"
+                },
+                "examples" : {
+                  "example1" : {
+                    "summary" : "A list of albums",
+                    "value" : [ {
+                      "album" : "After Hours",
+                      "artist" : "The Weeknd",
+                      "songs" : [ "Blinding Lights", "Save Your Tears" ]
+                    }, {
+                      "album" : "÷ (Divide)",
+                      "artist" : "Ed Sheeran",
+                      "songs" : [ "Shape of You", "Castle on the Hill" ]
+                    } ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Create a new album",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Album"
+              },
+              "examples" : {
+                "example1" : {
+                  "summary" : "New album creation",
+                  "value" : {
+                    "album" : "Future Nostalgia",
+                    "artist" : "Dua Lipa",
+                    "songs" : [ "Don't Start Now", "Levitating" ]
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Album successfully created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Album"
+                },
+                "examples" : {
+                  "example1" : {
+                    "summary" : "Album created response",
+                    "value" : {
+                      "album" : "Future Nostalgia",
+                      "artist" : "Dua Lipa",
+                      "songs" : [ "Don't Start Now", "Levitating" ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/albums/{albumName}" : {
+      "get" : {
+        "summary" : "Retrieve a specific album",
+        "parameters" : [ {
+          "name" : "albumName",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Details of the specified album",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Album"
+                },
+                "examples" : {
+                  "example1" : {
+                    "summary" : "Album details",
+                    "value" : {
+                      "album" : "Future Nostalgia",
+                      "artist" : "Dua Lipa",
+                      "songs" : [ "Don't Start Now", "Levitating" ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Update an existing album",
+        "parameters" : [ {
+          "name" : "albumName",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Album"
+              },
+              "examples" : {
+                "example1" : {
+                  "summary" : "Update album details",
+                  "value" : {
+                    "album" : "÷ (Divide)",
+                    "artist" : "Ed Sheeran",
+                    "songs" : [ "Shape of You", "Castle on the Hill" ]
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Album successfully updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Album"
+                },
+                "examples" : {
+                  "example1" : {
+                    "summary" : "Updated album response",
+                    "value" : {
+                      "album" : "÷ (Divide)",
+                      "artist" : "Ed Sheeran",
+                      "songs" : [ "Shape of You", "Castle on the Hill" ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Delete a specific album",
+        "parameters" : [ {
+          "name" : "albumName",
+          "in" : "path",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Album successfully deleted"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Album" : {
+        "type" : "object",
+        "properties" : {
+          "album" : {
+            "type" : "string",
+            "example" : "After Hours"
+          },
+          "artist" : {
+            "type" : "string",
+            "example" : "The Weeknd"
+          },
+          "songs" : {
+            "type" : "array",
+            "example" : [ "Blinding Lights", "Save Your Tears" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "example" : {
+          "artist" : "The Weeknd",
+          "album" : "After Hours",
+          "songs" : [ "Blinding Lights", "Save Your Tears" ]
+        }
+      }
+    }
+  }
+}
