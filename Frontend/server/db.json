@@ -1,0 +1,45 @@
+{
+  "albums": [
+    {
+      "id": "5e1b",
+      "_Album": "Dark Side of the Moon",
+      "Artist": "Pink Floyd",
+      "Songs": [
+        "Time",
+        "Breathe"
+      ]
+    },
+    {
+      "_Album": "Thriller",
+      "Artist": "Micheal Jackson",
+      "Songs": [
+        "Thriller"
+      ],
+      "id": "df3e"
+    },
+    {
+      "id": "93b9",
+      "_Album": "Abbey Road",
+      "Artist": "The Beatles",
+      "Songs": [
+        "Something"
+      ]
+    },
+    {
+      "id": "5180",
+      "_Album": "A Rock Album",
+      "Artist": "Dr. Hook",
+      "Songs": [
+        "Sharing"
+      ]
+    },
+    {
+      "id": "6562",
+      "_Album": "E Rock Album",
+      "Artist": "Maggots",
+      "Songs": [
+        "Playing"
+      ]
+    }
+  ]
+}
