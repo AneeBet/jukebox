@@ -1,0 +1,42 @@
+{
+  "songs": [
+    {
+      "id": "1",
+      "_Song": "Blinding Lights",
+      "Artist": "The Weeknd",
+      "Album": "After Hours",
+      "Playlist": [
+        "Top 100",
+        "Party Hits"
+      ]
+    },
+    {
+      "id": "2",
+      "_Song": "Shape of You",
+      "Artist": "Ed Sheeran",
+      "Album": "(Divide)",
+      "Playlist": [
+        "Pop Hits",
+        "Summer Vibes"
+      ]
+    },
+    {
+      "id": "be09",
+      "_Song": "Humsafar",
+      "Artist": "Akhil Sachdeva",
+      "Album": "Top 100",
+      "Playlist": [
+        "After Hours"
+      ]
+    },
+    {
+      "id": "7df2",
+      "_Song": "What Do You Mean? .",
+      "Artist": "Justin Biber",
+      "Album": "One Time",
+      "Playlist": [
+        "Sorry"
+      ]
+    }
+  ]
+}
