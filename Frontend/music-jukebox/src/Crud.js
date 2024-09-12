@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./App.css"; // Import the CSS file for styling
+import "./App.css";
+import { Link } from "react-router-dom";
 
 const Crud = () => {
   const [albums, setAlbums] = useState([]);
@@ -165,6 +166,9 @@ const Crud = () => {
           {editingAlbumId ? "Update Album" : "Add Album"}
         </button>
         {editingAlbumId && <button onClick={resetForm}>Cancel</button>}
+        <Link to={"/songs"}>
+          <button>Go to Songs Adding Page</button>
+        </Link>
       </div>
     </div>
   );

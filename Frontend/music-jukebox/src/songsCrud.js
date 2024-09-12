@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css"; // Import your CSS file for styling
+import { Link } from "react-router-dom";
 
 const SongsCrud = () => {
   const [songs, setSongs] = useState([]);
@@ -18,7 +19,7 @@ const SongsCrud = () => {
   // Fetch all songs
   useEffect(() => {
     axios
-      .get("http://localhost:3000/songs")
+      .get("http://localhost:3002/songs")
       .then((response) => setSongs(response.data))
       .catch((error) => console.error("Error fetching songs:", error));
   }, []);
@@ -28,7 +29,7 @@ const SongsCrud = () => {
     if (editingSongId) {
       // Update existing song
       axios
-        .put(`http://localhost:3000/songs/${editingSongId}`, newSong)
+        .put(`http://localhost:3002/songs/${editingSongId}`, newSong)
         .then((response) => {
           const updatedSongs = songs.map((song) =>
             song.id === editingSongId ? response.data : song
@@ -40,7 +41,7 @@ const SongsCrud = () => {
     } else {
       // Add a new song
       axios
-        .post("http://localhost:3000/songs", newSong)
+        .post("http://localhost:3002/songs", newSong)
         .then((response) => {
           setSongs([...songs, response.data]);
           resetForm();
@@ -63,7 +64,7 @@ const SongsCrud = () => {
   // Delete a song
   const deleteSong = (id) => {
     axios
-      .delete(`http://localhost:3000/songs/${id}`)
+      .delete(`http://localhost:3002/songs/${id}`)
       .then(() => {
         const filteredSongs = songs.filter((song) => song.id !== id);
         setSongs(filteredSongs);
@@ -178,6 +179,9 @@ const SongsCrud = () => {
           {editingSongId ? "Update Song" : "Add Song"}
         </button>
         {editingSongId && <button onClick={resetForm}>Cancel</button>}
+        <Link to={"/"}>
+          <button>Go Back to Albums Adding Page</button>
+        </Link>
       </div>
     </div>
   );
