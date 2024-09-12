@@ -10,8 +10,8 @@ const Crud = () => {
     artist: "",
     songs: [],
   });
-  const [editingAlbumId, setEditingAlbumId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [editingAlbumName, setEditingAlbumName] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [sortKey, setSortKey] = useState("album");
 
@@ -25,13 +25,13 @@ const Crud = () => {
 
   // Add or update an album
   const saveAlbum = () => {
-    if (editingAlbumId) {
+    if (editingAlbumName) {
       // Update existing album
       axios
-        .put(`http://localhost:5000/api/albums/${editingAlbumId}`, newAlbum)
+        .put(`http://localhost:5000/api/albums/${editingAlbumName}`, newAlbum)
         .then((response) => {
           const updatedAlbums = albums.map((album) =>
-            album.id === editingAlbumId ? response.data : album
+            album.album === editingAlbumName ? response.data : album
           );
           setAlbums(updatedAlbums);
           resetForm();
@@ -56,15 +56,17 @@ const Crud = () => {
       artist: album.artist,
       songs: album.songs,
     });
-    setEditingAlbumId(album.id);
+    setEditingAlbumName(album.album);
   };
 
   // Delete an album
-  const deleteAlbum = (id) => {
+  const deleteAlbum = (albumName) => {
     axios
-      .delete(`http://localhost:5000/api/albums/${id}`)
+      .delete(`http://localhost:5000/api/albums/${albumName}`)
       .then(() => {
-        const filteredAlbums = albums.filter((album) => album.id !== id);
+        const filteredAlbums = albums.filter(
+          (album) => album.album !== albumName
+        );
         setAlbums(filteredAlbums);
       })
       .catch((error) => console.error("Error deleting album:", error));
@@ -73,7 +75,7 @@ const Crud = () => {
   // Reset the form fields
   const resetForm = () => {
     setNewAlbum({ album: "", artist: "", songs: [] });
-    setEditingAlbumId(null);
+    setEditingAlbumName(null);
   };
 
   // Sort and filter albums
@@ -127,20 +129,20 @@ const Crud = () => {
         </thead>
         <tbody>
           {sortedAlbums.map((album) => (
-            <tr key={album.id}>
+            <tr key={album.album}>
               <td>{album.album}</td>
               <td>{album.artist}</td>
               <td>{album.songs.join(", ")}</td>
               <td>
                 <button onClick={() => editAlbum(album)}>Edit</button>
-                <button onClick={() => deleteAlbum(album.id)}>Delete</button>
+                <button onClick={() => deleteAlbum(album.album)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <h2>{editingAlbumId ? "Edit Album" : "Add New Album"}</h2>
+      <h2>{editingAlbumName ? "Edit Album" : "Add New Album"}</h2>
       <div className="form-group">
         <input
           type="text"
@@ -165,9 +167,9 @@ const Crud = () => {
           }
         />
         <button onClick={saveAlbum}>
-          {editingAlbumId ? "Update Album" : "Add Album"}
+          {editingAlbumName ? "Update Album" : "Add Album"}
         </button>
-        {editingAlbumId && <button onClick={resetForm}>Cancel</button>}
+        {editingAlbumName && <button onClick={resetForm}>Cancel</button>}
         <Link to={"/songs"}>
           <button>Go to Songs Adding Page</button>
         </Link>
