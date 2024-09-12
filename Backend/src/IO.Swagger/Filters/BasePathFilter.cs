@@ -1,50 +1,60 @@
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace IO.Swagger.Filters
 {
     /// <summary>
-    /// BasePath Document Filter sets BasePath property of Swagger and removes it from the individual URL paths
+    /// BasePathFilter sets the base path of Swagger and adjusts individual URL paths.
     /// </summary>
     public class BasePathFilter : IDocumentFilter
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="BasePathFilter"/> class.
         /// </summary>
-        /// <param name="basePath">BasePath to remove from Operations</param>
+        /// <param name="basePath">Base path to set for the Swagger document.</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="basePath"/> is null or empty.</exception>
         public BasePathFilter(string basePath)
         {
+            if (string.IsNullOrWhiteSpace(basePath))
+            {
+                throw new ArgumentException("Base path cannot be null or empty", nameof(basePath));
+            }
+
             BasePath = basePath;
         }
 
         /// <summary>
-        /// Gets the BasePath of the Swagger Doc
+        /// Gets the base path for the Swagger document.
         /// </summary>
-        /// <returns>The BasePath of the Swagger Doc</returns>
         public string BasePath { get; }
 
         /// <summary>
-        /// Apply the filter
+        /// Applies the filter to the Swagger document.
         /// </summary>
-        /// <param name="swaggerDoc">OpenApiDocument</param>
-        /// <param name="context">FilterContext</param>
+        /// <param name="swaggerDoc">Swagger document to modify.</param>
+        /// <param name="context">Filter context.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="swaggerDoc"/> or <paramref name="context"/> is null.</exception>
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
-            swaggerDoc.Servers.Add(new OpenApiServer() { Url = this.BasePath });
+            if (swaggerDoc == null) throw new ArgumentNullException(nameof(swaggerDoc));
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var pathsToModify = swaggerDoc.Paths.Where(p => p.Key.StartsWith(this.BasePath)).ToList();
+            // Set the base path for the Swagger document
+            swaggerDoc.Servers.Add(new OpenApiServer { Url = BasePath });
+
+            // Adjust paths in the Swagger document
+            var pathsToModify = swaggerDoc.Paths
+                .Where(p => p.Key.StartsWith(BasePath))
+                .ToList();
 
             foreach (var path in pathsToModify)
             {
-                if (path.Key.StartsWith(this.BasePath))
-                {
-                    string newKey = Regex.Replace(path.Key, $"^{this.BasePath}", string.Empty);
-                    swaggerDoc.Paths.Remove(path.Key);
-                    swaggerDoc.Paths.Add(newKey, path.Value);
-                }
+                var newKey = Regex.Replace(path.Key, $"^{BasePath}", string.Empty);
+                swaggerDoc.Paths.Remove(path.Key);
+                   swaggerDoc.Paths.Add(newKey, path.Value);
             }
         }
     }

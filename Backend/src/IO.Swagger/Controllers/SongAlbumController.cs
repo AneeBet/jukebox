@@ -18,6 +18,7 @@ namespace IO.Swagger.Controllers
 
         static SongAlbumController()
         {
+            //Added logging features
             // Initialize with some dummy data
             _albums = new List<Album>
             {
@@ -123,8 +124,6 @@ namespace IO.Swagger.Controllers
         /// Creates a new album.
         /// </summary>
         /// <param name="body">The details of the new album.</param>
-        /// <response code="201">Album successfully created.</response>
-        /// <response code="400">Invalid input data.</response>
         [HttpPost]
         [Route("/api/albums")]
         [SwaggerOperation("AlbumsPost")]
@@ -132,7 +131,16 @@ namespace IO.Swagger.Controllers
         public IActionResult AlbumsPost([FromBody]Album body)
         {
             if (!ModelState.IsValid || body == null || string.IsNullOrEmpty(body._Album))
+            {
+                // Log model state errors for debugging
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+                
                 return BadRequest(ModelState);
+            }
 
             _albums.Add(body);
             return CreatedAtAction(nameof(AlbumsAlbumNameGet), new { albumName = body._Album }, body);
