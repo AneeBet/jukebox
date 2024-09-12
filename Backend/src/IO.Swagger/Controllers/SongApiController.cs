@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using IO.Swagger.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace IO.Swagger.Controllers
 {
@@ -12,6 +13,7 @@ namespace IO.Swagger.Controllers
     /// API controller for managing songs
     /// </summary>
     [ApiController]
+    [EnableCors]
     public class SongApiController : ControllerBase
     {
         private static readonly List<Song> _songs = new()

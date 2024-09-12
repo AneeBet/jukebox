@@ -6,19 +6,19 @@ import { Link } from "react-router-dom";
 const Crud = () => {
   const [albums, setAlbums] = useState([]);
   const [newAlbum, setNewAlbum] = useState({
-    _Album: "",
-    Artist: "",
-    Songs: [],
+    album: "",
+    artist: "",
+    songs: [],
   });
   const [editingAlbumId, setEditingAlbumId] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // State for the search term
-  const [sortOrder, setSortOrder] = useState("asc"); // State for sorting order
-  const [sortKey, setSortKey] = useState("_Album"); // State for sorting key
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortKey, setSortKey] = useState("album");
 
   // Fetch all albums
   useEffect(() => {
     axios
-      .get("http://localhost:3001/albums")
+      .get("http://localhost:5000/api/albums")
       .then((response) => setAlbums(response.data))
       .catch((error) => console.error("Error fetching albums:", error));
   }, []);
@@ -28,7 +28,7 @@ const Crud = () => {
     if (editingAlbumId) {
       // Update existing album
       axios
-        .put(`http://localhost:3001/albums/${editingAlbumId}`, newAlbum)
+        .put(`http://localhost:5000/api/albums/${editingAlbumId}`, newAlbum)
         .then((response) => {
           const updatedAlbums = albums.map((album) =>
             album.id === editingAlbumId ? response.data : album
@@ -40,7 +40,7 @@ const Crud = () => {
     } else {
       // Add a new album
       axios
-        .post("http://localhost:3001/albums", newAlbum)
+        .post("http://localhost:5000/api/albums", newAlbum)
         .then((response) => {
           setAlbums([...albums, response.data]);
           resetForm();
@@ -52,9 +52,9 @@ const Crud = () => {
   // Prepare the form for editing an album
   const editAlbum = (album) => {
     setNewAlbum({
-      _Album: album._Album,
-      Artist: album.Artist,
-      Songs: album.Songs,
+      album: album.album,
+      artist: album.artist,
+      songs: album.songs,
     });
     setEditingAlbumId(album.id);
   };
@@ -62,7 +62,7 @@ const Crud = () => {
   // Delete an album
   const deleteAlbum = (id) => {
     axios
-      .delete(`http://localhost:3001/albums/${id}`)
+      .delete(`http://localhost:5000/api/albums/${id}`)
       .then(() => {
         const filteredAlbums = albums.filter((album) => album.id !== id);
         setAlbums(filteredAlbums);
@@ -72,7 +72,7 @@ const Crud = () => {
 
   // Reset the form fields
   const resetForm = () => {
-    setNewAlbum({ _Album: "", Artist: "", Songs: [] });
+    setNewAlbum({ album: "", artist: "", songs: [] });
     setEditingAlbumId(null);
   };
 
@@ -80,14 +80,16 @@ const Crud = () => {
   const sortedAlbums = [...albums]
     .filter(
       (album) =>
-        album._Album.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        album.Artist.toLowerCase().includes(searchTerm.toLowerCase())
+        album.album.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        album.artist.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
+      const aValue = (a[sortKey] || "").toLowerCase();
+      const bValue = (b[sortKey] || "").toLowerCase();
       if (sortOrder === "asc") {
-        return a[sortKey].localeCompare(b[sortKey]);
+        return aValue.localeCompare(bValue);
       } else {
-        return b[sortKey].localeCompare(a[sortKey]);
+        return bValue.localeCompare(aValue);
       }
     });
 
@@ -117,8 +119,8 @@ const Crud = () => {
       <table>
         <thead>
           <tr>
-            <th onClick={() => toggleSortOrder("_Album")}>Album</th>
-            <th onClick={() => toggleSortOrder("Artist")}>Artist</th>
+            <th onClick={() => toggleSortOrder("album")}>Album</th>
+            <th onClick={() => toggleSortOrder("artist")}>Artist</th>
             <th>Songs</th>
             <th>Actions</th>
           </tr>
@@ -126,9 +128,9 @@ const Crud = () => {
         <tbody>
           {sortedAlbums.map((album) => (
             <tr key={album.id}>
-              <td>{album._Album}</td>
-              <td>{album.Artist}</td>
-              <td>{album.Songs.join(", ")}</td>
+              <td>{album.album}</td>
+              <td>{album.artist}</td>
+              <td>{album.songs.join(", ")}</td>
               <td>
                 <button onClick={() => editAlbum(album)}>Edit</button>
                 <button onClick={() => deleteAlbum(album.id)}>Delete</button>
@@ -143,22 +145,22 @@ const Crud = () => {
         <input
           type="text"
           placeholder="Album Name"
-          value={newAlbum._Album}
-          onChange={(e) => setNewAlbum({ ...newAlbum, _Album: e.target.value })}
+          value={newAlbum.album}
+          onChange={(e) => setNewAlbum({ ...newAlbum, album: e.target.value })}
         />
         <input
           type="text"
           placeholder="Artist"
-          value={newAlbum.Artist}
-          onChange={(e) => setNewAlbum({ ...newAlbum, Artist: e.target.value })}
+          value={newAlbum.artist}
+          onChange={(e) => setNewAlbum({ ...newAlbum, artist: e.target.value })}
         />
         <textarea
           placeholder="Songs (comma-separated)"
-          value={newAlbum.Songs.join(", ")}
+          value={newAlbum.songs.join(", ")}
           onChange={(e) =>
             setNewAlbum({
               ...newAlbum,
-              Songs: e.target.value.split(",").map((song) => song.trim()),
+              songs: e.target.value.split(",").map((song) => song.trim()),
             })
           }
         />

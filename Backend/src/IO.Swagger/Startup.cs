@@ -37,6 +37,15 @@ namespace IO.Swagger
         /// <param name="services">Service collection</param>
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configure CORS policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalhost3000",
+                    builder => builder.WithOrigins("http://localhost:3000")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+            });
+
             services
                 .AddControllers()
                 .AddNewtonsoftJson(opts =>
@@ -100,13 +109,16 @@ namespace IO.Swagger
 
             app.UseRouting();
 
+            // Apply CORS policy
+            app.UseCors("AllowLocalhost3000");
+
             app.UseAuthorization();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Music Album API");
-                // Optionally configure Swagger UI options
+                //configuring Swagger UI options
                 c.RoutePrefix = string.Empty; // To serve the Swagger UI at the app's root
             });
 
